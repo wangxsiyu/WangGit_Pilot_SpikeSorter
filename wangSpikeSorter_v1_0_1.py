@@ -552,7 +552,12 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow):
         self.data['units'].itemset(units)
         waves = self.data['waves'].item().copy()
         if waves.shape[0] == n_pixel: # rotate when 52x52
+            print('warning: 52 waves were loaded, confused on matrix rotation!!!')
             self.data['waves'].itemset(waves.T)
+        if 'rater_confidence' not in self.rawmat:
+            print('initialize rater_confidence')
+            self.rawmat['rater_confidence'] = np.zeros((1,10))
+            self.rawmat['rater_confidence'] = np.int64(self.rawmat['rater_confidence'])
         self.addhistory()
     def comp_setup(self):
         # compute PCA
@@ -816,7 +821,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow):
             tid = (units == i).squeeze()
             n_uniti = np.sum(tid)
             n_unitall = len(units)
-            str = f"{n_uniti/n_unitall*100:.1f}%"
+            str = f"{n_uniti/n_unitall*100:.1f}%, {self.rawmat['rater_confidence'][0][i]}"
             # str = str + str_L
             self.units_axes[0, i].setTitle(str) # fake title
             self.units_axes[0, i].clear()
@@ -872,6 +877,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow):
             return
         if key < 200: #ascii codes range
             str = chr(key)
+            # print(key, str)
             if str.isdigit():
                 keyint = np.int64(str)
                 if (keyint >=0) and (keyint <self.n_maxunit):
@@ -888,6 +894,14 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow):
                 if str == 'A':
                     self.update_selected()
                     self.set_addpoint(0)
+            if str == '=':
+                self.rawmat['rater_confidence'][0][self.unit_now] = self.rawmat['rater_confidence'][0][self.unit_now] + 1
+                self.plt_units()
+                self.autosave()
+            if str == '-':
+                self.rawmat['rater_confidence'][0][self.unit_now] = self.rawmat['rater_confidence'][0][self.unit_now] - 1
+                self.plt_units()
+                self.autosave()
     def get_lockedlines(self):
         units = self.data['units'].item()
         out = np.zeros_like(units)
@@ -1128,12 +1142,13 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow):
         self.n_file = len(self.filelists)
         self.choosefile(0)
     def sw_load_folder(self):
-        self.folderName = './sampledata'
-        # dlg = QFileDialog()
-        # if dlg.exec_():
-        #     self.folderName = dlg.selectedFiles()[0]
-        #     if self.folderName:
-        self.load_folder()
+        self.folderName = ''
+        dlg = QFileDialog()
+        dlg.setFileMode(QFileDialog.Directory)
+        if dlg.exec_():
+            self.folderName = dlg.selectedFiles()[0]
+            if self.folderName:
+                self.load_folder()
     def sw_previouschannel(self):
         self.fileid = self.fileid - 1
         if self.fileid < 0:

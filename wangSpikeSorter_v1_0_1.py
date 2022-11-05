@@ -115,127 +115,165 @@ class MultiLine(pg.QtGui.QGraphicsPathItem):
     def boundingRect(self):
         return self.path.boundingRect()
 class Ui_MainWindow(object):
+    def getwindowsizes(self):
+        sz = {'mainwindow':(1410, 702),\
+                'group_units':(780,0,621,591), \
+                'graphicsView_units':(10, 30, 601, 551),\
+                'group_PCA':(10, 10, 761, 431), \
+                'comboBox_PC1':(10, 375, 71, 41),\
+                'comboBox_PC2':(10, 400, 71, 41),\
+                'checkBox_showallunits':(90, 385, 71, 41),\
+                'pushButton_Add':(250, 390, 81, 32),\
+                'pushButton_Remove':(330, 390, 81, 32),\
+                'pushButton_resettemp':(410, 390, 81, 32),\
+                'pushButton_noise':(590, 390, 81, 32),\
+                'pushButton_Confirm':(670, 390, 81, 32),\
+                'checkBox_showunsorted':(485, 385, 130, 20),\
+                'checkBox_usefordist':(485, 405, 130, 20),\
+                'graphicsView_pca':(10, 30, 351, 351),\
+                'graphicsView_raw':(370, 30, 381, 351),\
+                'pushButton_reset':(170, 390, 81, 32),\
+                'group_Methods':(10, 440, 261, 211),\
+                'comboBox_ClusterMethods':(10, 40, 204, 26),\
+                'checkBox_locked':(10, 70, 100, 20),\
+                'pushButton_sortall':(10, 170, 113, 32),\
+                'frame_Channel':(780, 600, 621, 51),\
+                'label_channel':(10, 10, 171, 31),\
+                'comboBox_channel':(310, 10, 81, 31),\
+                'pushButton_previouschannel':(390, 10, 113, 32),\
+                'pushButton_nextchannel':(500, 10, 113, 32),\
+                'groupBox_side':(280, 440, 491, 211),\
+                'graphicsView_side1':(0, 20, 241, 191),\
+                'graphicsView_side2':(240, 21, 251, 191),\
+                'menubar':(0, 0, 1410, 24)}
+        ratio = 2
+        for i, j in sz.items():
+            sz[i] = [(ratio * k) for k in j]
+        return sz
+    def my_QtCore_QRect(self, x):
+        return QtCore.QRect(x[0], x[1], x[2], x[3])
     def setupUi(self, MainWindow):
+        sz = self.getwindowsizes()
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1410, 702)
+        MainWindow.resize(sz['mainwindow'][0],sz['mainwindow'][1])
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.group_Units = QtWidgets.QGroupBox(self.centralwidget)
-        self.group_Units.setGeometry(QtCore.QRect(780, 0, 621, 591))
+        self.group_Units.setGeometry(self.my_QtCore_QRect(sz['group_units']))
         self.group_Units.setObjectName("group_Units")
         self.graphicsView_units = GraphicsLayoutWidget(self.group_Units)
-        self.graphicsView_units.setGeometry(QtCore.QRect(10, 30, 601, 551))
+        self.graphicsView_units.setGeometry(self.my_QtCore_QRect(sz['graphicsView_units']))
         self.graphicsView_units.setObjectName("graphicsView_units")
         self.group_PCA = QtWidgets.QGroupBox(self.centralwidget)
-        self.group_PCA.setGeometry(QtCore.QRect(10, 10, 761, 431))
+        self.group_PCA.setGeometry(self.my_QtCore_QRect(sz['group_PCA']))
         self.group_PCA.setObjectName("group_PCA")
         self.comboBox_PC1 = QtWidgets.QComboBox(self.group_PCA)
-        self.comboBox_PC1.setGeometry(QtCore.QRect(10, 375, 71, 41))
+        self.comboBox_PC1.setGeometry(self.my_QtCore_QRect(sz['comboBox_PC1']))
         self.comboBox_PC1.setObjectName("comboBox_PC1")
         self.comboBox_PC1.addItem("")
         self.comboBox_PC1.addItem("")
         self.comboBox_PC1.addItem("")
         self.comboBox_PC1.addItem("")
         self.comboBox_PC2 = QtWidgets.QComboBox(self.group_PCA)
-        self.comboBox_PC2.setGeometry(QtCore.QRect(10, 400, 71, 41))
+        self.comboBox_PC2.setGeometry(self.my_QtCore_QRect(sz['comboBox_PC2']))
         self.comboBox_PC2.setObjectName("comboBox_PC2")
         self.comboBox_PC2.addItem("")
         self.comboBox_PC2.addItem("")
         self.comboBox_PC2.addItem("")
         self.comboBox_PC2.addItem("")
         self.checkBox_showallunits = QtWidgets.QCheckBox(self.group_PCA)
-        self.checkBox_showallunits.setGeometry(QtCore.QRect(90, 385, 71, 41))
+        self.checkBox_showallunits.setGeometry(self.my_QtCore_QRect(sz['checkBox_showallunits']))
         self.checkBox_showallunits.setObjectName("checkBox_showallunits")
         self.pushButton_Add = QtWidgets.QPushButton(self.group_PCA)
-        self.pushButton_Add.setGeometry(QtCore.QRect(250, 390, 81, 32))
+        self.pushButton_Add.setGeometry(self.my_QtCore_QRect(sz['pushButton_Add']))
         self.pushButton_Add.setObjectName("pushButton_Add")
         self.pushButton_Remove = QtWidgets.QPushButton(self.group_PCA)
-        self.pushButton_Remove.setGeometry(QtCore.QRect(330, 390, 81, 32))
+        self.pushButton_Remove.setGeometry(self.my_QtCore_QRect(sz['pushButton_Remove']))
         self.pushButton_Remove.setObjectName("pushButton_Remove")
         self.pushButton_resettemp = QtWidgets.QPushButton(self.group_PCA)
-        self.pushButton_resettemp.setGeometry(QtCore.QRect(410, 390, 81, 32))
+        self.pushButton_resettemp.setGeometry(self.my_QtCore_QRect(sz['pushButton_resettemp']))
         self.pushButton_resettemp.setObjectName("pushButton_resettemp")
         self.pushButton_noise = QtWidgets.QPushButton(self.group_PCA)
-        self.pushButton_noise.setGeometry(QtCore.QRect(590, 390, 81, 32))
+        self.pushButton_noise.setGeometry(self.my_QtCore_QRect(sz['pushButton_noise']))
         self.pushButton_noise.setObjectName("pushButton_noise")
         self.pushButton_Confirm = QtWidgets.QPushButton(self.group_PCA)
-        self.pushButton_Confirm.setGeometry(QtCore.QRect(670, 390, 81, 32))
+        self.pushButton_Confirm.setGeometry(self.my_QtCore_QRect(sz['pushButton_Confirm']))
         self.pushButton_Confirm.setObjectName("pushButton_Confirm")
         self.checkBox_showunsorted = QtWidgets.QCheckBox(self.group_PCA)
-        self.checkBox_showunsorted.setGeometry(QtCore.QRect(485, 385, 130, 20))
+        self.checkBox_showunsorted.setGeometry(self.my_QtCore_QRect(sz['checkBox_showunsorted']))
         self.checkBox_showunsorted.setObjectName("checkBox_showunsorted")
         self.checkBox_usefordist = QtWidgets.QCheckBox(self.group_PCA)
-        self.checkBox_usefordist.setGeometry(QtCore.QRect(485, 405, 130, 20))
+        self.checkBox_usefordist.setGeometry(self.my_QtCore_QRect(sz['checkBox_usefordist']))
         self.checkBox_usefordist.setObjectName("checkBox_usefordist")
         # self.checkBox_useasmodel = QtWidgets.QCheckBox(self.group_PCA)
-        # self.checkBox_useasmodel.setGeometry(QtCore.QRect(490, 400, 111, 20))
+        # self.checkBox_useasmodel.setGeometry(self.my_QtCore_QRect(490, 400, 111, 20))
         # self.checkBox_useasmodel.setChecked(True)
         # self.checkBox_useasmodel.setObjectName("checkBox_useasmodel")
         self.graphicsView_pca = PlotWidget(self.group_PCA)
-        self.graphicsView_pca.setGeometry(QtCore.QRect(10, 30, 351, 351))
+        self.graphicsView_pca.setGeometry(self.my_QtCore_QRect(sz['graphicsView_pca']))
         self.graphicsView_pca.setObjectName("graphicsView_pca")
         self.graphicsView_raw = PlotWidget(self.group_PCA)
-        self.graphicsView_raw.setGeometry(QtCore.QRect(370, 30, 381, 351))
+        self.graphicsView_raw.setGeometry(self.my_QtCore_QRect(sz['graphicsView_raw']))
         self.graphicsView_raw.setObjectName("graphicsView_raw")
         self.pushButton_reset = QtWidgets.QPushButton(self.group_PCA)
-        self.pushButton_reset.setGeometry(QtCore.QRect(170, 390, 81, 32))
+        self.pushButton_reset.setGeometry(self.my_QtCore_QRect(sz['pushButton_reset']))
         self.pushButton_reset.setObjectName("pushButton_reset")
         self.group_Methods = QtWidgets.QGroupBox(self.centralwidget)
-        self.group_Methods.setGeometry(QtCore.QRect(10, 440, 261, 211))
+        self.group_Methods.setGeometry(self.my_QtCore_QRect(sz['group_Methods']))
         self.group_Methods.setObjectName("group_Methods")
         self.comboBox_ClusterMethods = QtWidgets.QComboBox(self.group_Methods)
-        self.comboBox_ClusterMethods.setGeometry(QtCore.QRect(10, 40, 204, 26))
+        self.comboBox_ClusterMethods.setGeometry(self.my_QtCore_QRect(sz['comboBox_ClusterMethods']))
         self.comboBox_ClusterMethods.setObjectName("comboBox_ClusterMethods")
         self.comboBox_ClusterMethods.addItem("")
         self.comboBox_ClusterMethods.addItem("")
         self.comboBox_ClusterMethods.addItem("")
         self.checkBox_locked = QtWidgets.QCheckBox(self.group_Methods)
-        self.checkBox_locked.setGeometry(QtCore.QRect(10, 70, 100, 20))
+        self.checkBox_locked.setGeometry(self.my_QtCore_QRect(sz['checkBox_locked']))
         self.checkBox_locked.setObjectName("checkBox_locked")
         # self.pushButton_sortsafe = QtWidgets.QPushButton(self.group_Methods)
-        # self.pushButton_sortsafe.setGeometry(QtCore.QRect(10, 140, 171, 32))
+        # self.pushButton_sortsafe.setGeometry(self.my_QtCore_QRect(10, 140, 171, 32))
         # self.pushButton_sortsafe.setObjectName("pushButton_sortsafe")
         self.pushButton_sortall = QtWidgets.QPushButton(self.group_Methods)
-        self.pushButton_sortall.setGeometry(QtCore.QRect(10, 170, 113, 32))
+        self.pushButton_sortall.setGeometry(self.my_QtCore_QRect(sz['pushButton_sortall']))
         self.pushButton_sortall.setObjectName("pushButton_sortall")
         # self.textEdit_sortsafe = QtWidgets.QTextEdit(self.group_Methods)
-        # self.textEdit_sortsafe.setGeometry(QtCore.QRect(180, 140, 71, 31))
+        # self.textEdit_sortsafe.setGeometry(self.my_QtCore_QRect(180, 140, 71, 31))
         # self.textEdit_sortsafe.setObjectName("textEdit_sortsafe")
         self.frame_Channel = QtWidgets.QFrame(self.centralwidget)
-        self.frame_Channel.setGeometry(QtCore.QRect(780, 600, 621, 51))
+        self.frame_Channel.setGeometry(self.my_QtCore_QRect(sz['frame_Channel']))
         self.frame_Channel.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame_Channel.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_Channel.setObjectName("frame_Channel")
         self.label_channel = QtWidgets.QLabel(self.frame_Channel)
-        self.label_channel.setGeometry(QtCore.QRect(10, 10, 171, 31))
+        self.label_channel.setGeometry(self.my_QtCore_QRect(sz['label_channel']))
         self.label_channel.setObjectName("label_channel")
         # self.textEdit_channel = QtWidgets.QTextEdit(self.frame_Channel)
-        # self.textEdit_channel.setGeometry(QtCore.QRect(190, 10, 81, 31))
+        # self.textEdit_channel.setGeometry(self.my_QtCore_QRect(190, 10, 81, 31))
         # self.textEdit_channel.setObjectName("textEdit_channel")
         self.comboBox_channel = QtWidgets.QComboBox(self.frame_Channel)
-        self.comboBox_channel.setGeometry(QtCore.QRect(310, 10, 81, 31))
+        self.comboBox_channel.setGeometry(self.my_QtCore_QRect(sz['comboBox_channel']))
         self.comboBox_channel.setObjectName("comboBox_channel")
         # self.pushButton_gotochannel = QtWidgets.QPushButton(self.frame_Channel)
-        # self.pushButton_gotochannel.setGeometry(QtCore.QRect(280, 10, 113, 32))
+        # self.pushButton_gotochannel.setGeometry(self.my_QtCore_QRect(280, 10, 113, 32))
         # self.pushButton_gotochannel.setObjectName("pushButton_gotochannel")
         self.pushButton_previouschannel = QtWidgets.QPushButton(self.frame_Channel)
-        self.pushButton_previouschannel.setGeometry(QtCore.QRect(390, 10, 113, 32))
+        self.pushButton_previouschannel.setGeometry(self.my_QtCore_QRect(sz['pushButton_previouschannel']))
         self.pushButton_previouschannel.setObjectName("pushButton_previouschannel")
         self.pushButton_nextchannel = QtWidgets.QPushButton(self.frame_Channel)
-        self.pushButton_nextchannel.setGeometry(QtCore.QRect(500, 10, 113, 32))
+        self.pushButton_nextchannel.setGeometry(self.my_QtCore_QRect(sz['pushButton_nextchannel']))
         self.pushButton_nextchannel.setObjectName("pushButton_nextchannel")
         self.groupBox_side = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_side.setGeometry(QtCore.QRect(280, 440, 491, 211))
+        self.groupBox_side.setGeometry(self.my_QtCore_QRect(sz['groupBox_side']))
         self.groupBox_side.setObjectName("groupBox_side")
         self.graphicsView_side1 = PlotWidget(self.groupBox_side)
-        self.graphicsView_side1.setGeometry(QtCore.QRect(0, 20, 241, 191))
+        self.graphicsView_side1.setGeometry(self.my_QtCore_QRect(sz['graphicsView_side1']))
         self.graphicsView_side1.setObjectName("graphicsView_side1")
         self.graphicsView_side2 = PlotWidget(self.groupBox_side)
-        self.graphicsView_side2.setGeometry(QtCore.QRect(240, 21, 251, 191))
+        self.graphicsView_side2.setGeometry(self.my_QtCore_QRect(sz['graphicsView_side2']))
         self.graphicsView_side2.setObjectName("graphicsView_side2")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1410, 24))
+        self.menubar.setGeometry(self.my_QtCore_QRect(sz['menubar']))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -1090,11 +1128,12 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow):
         self.n_file = len(self.filelists)
         self.choosefile(0)
     def sw_load_folder(self):
-        dlg = QFileDialog()
-        if dlg.exec_():
-            self.folderName = dlg.selectedFiles()[0]
-            if self.folderName:
-                self.load_folder()
+        self.folderName = './sampledata'
+        # dlg = QFileDialog()
+        # if dlg.exec_():
+        #     self.folderName = dlg.selectedFiles()[0]
+        #     if self.folderName:
+        self.load_folder()
     def sw_previouschannel(self):
         self.fileid = self.fileid - 1
         if self.fileid < 0:

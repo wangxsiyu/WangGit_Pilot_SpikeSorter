@@ -821,7 +821,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow):
             tid = (units == i).squeeze()
             n_uniti = np.sum(tid)
             n_unitall = len(units)
-            str = f"{n_uniti/n_unitall*100:.1f}%, {self.rawmat['rater_confidence'][0][i]}"
+            str = f"{n_uniti:.0f}, {self.rawmat['rater_confidence'][0][i]}"
             # str = str + str_L
             self.units_axes[0, i].setTitle(str) # fake title
             self.units_axes[0, i].clear()

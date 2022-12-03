@@ -4,7 +4,7 @@ import scipy.io as sio
 
 class SpikeSorterIO():
     n_pixel = 52
-    n_maxunit = 5
+    n_maxunit = 6
     dataall = []
     rawall = []
     fullpathlist = sessionlist = filelist = channellist = []

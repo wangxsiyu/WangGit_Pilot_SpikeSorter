@@ -114,6 +114,15 @@ class MultiLine(pg.QtGui.QGraphicsPathItem):
     def boundingRect(self):
         return self.path.boundingRect()
 class Ui_MainWindow(object):
+    def __init__(self) -> None:
+        dlg = Dialog_getTextValue()
+        dlg.setLabel('screen ratio 1', 'leave empty')
+        dlg.setValue('2', 'welcome')
+        if dlg.exec():
+            c, l1, l2 = dlg.getInfo()
+            self.ratio = float(l1)
+        else:
+            self.ratio = 2
     def getwindowsizes(self):
         sz = {'mainwindow':(1410, 702),\
                 'group_units':(780,0,621,591), \
@@ -149,7 +158,7 @@ class Ui_MainWindow(object):
                 'graphicsView_side1':(0, 20, 241, 191),\
                 'graphicsView_side2':(240, 21, 251, 191),\
                 'menubar':(0, 0, 1410, 24)}
-        ratio = 2
+        ratio = self.ratio
         for i, j in sz.items():
             sz[i] = [(ratio * k) for k in j]
         return sz
@@ -337,6 +346,9 @@ class Ui_MainWindow(object):
         self.seestatssinglecurve = QtWidgets.QAction(MainWindow)
         self.seestatssinglecurve.setObjectName("seestatssinglecurve")
         self.menuFunction.addAction(self.seestatssinglecurve)
+        self.removeunitswithfewunits = QtWidgets.QAction(MainWindow)
+        self.removeunitswithfewunits.setObjectName("removeunitswithfewunits")
+        self.menuFunction.addAction(self.removeunitswithfewunits)
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuFunction.menuAction())
@@ -401,6 +413,7 @@ class Ui_MainWindow(object):
         self.RemovefromChannel.setText(_translate("MainWindow", "Remove from Channel"))
         self.setnoisethreshold.setText(_translate("MainWindow", "Set noise threshold"))
         self.seestatssinglecurve.setText(_translate("MainWindow", "Single curve stats"))
+        self.removeunitswithfewunits.setText(_translate("MainWindow", "remove neurons with few units"))
         self.comboBox_selectsession.setItemText(0, _translate("MainWindow", "return"))
         self.comboBox_selectsession.setItemText(1, _translate("MainWindow", "select all"))
         self.comboBox_selectsession.setItemText(2, _translate("MainWindow", "remove from active"))

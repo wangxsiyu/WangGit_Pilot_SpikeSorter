@@ -12,10 +12,10 @@ class Ui_viewer(QMainWindow):
         QMainWindow.__init__(self, parent = parent)
         self.cpu = SpikeSorterCPU()
     def getwindowsizes(self):
-        sz = {'mainwindow':(950, 850), \
-            'group_units': (10,10,920,820),\
-            'graphicsView_units':(10,10,900,800)}
-        ratio = 2
+        sz = {'mainwindow':(1250, 850), \
+            'group_units': (10,10,1220,820),\
+            'graphicsView_units':(10,10,1200,800)}
+        ratio = self.ratio
         for i, j in sz.items():
             sz[i] = [(ratio * k) for k in j]
         return sz
@@ -41,7 +41,8 @@ class Ui_viewer(QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.group_Units.setTitle(_translate("MainWindow", "Neurons"))
-    def setup_viewer(self, nrow, nfig, color_unit):
+    def setup_viewer(self, nrow, nfig, color_unit, ratio = 2):
+        self.ratio = ratio
         self.nrow = nrow
         self.setup_UI()
         self.graphicsView_units.setBackground('w')
@@ -98,18 +99,19 @@ class Ui_viewer(QMainWindow):
                 for j in range(len(tu)):
                     ui = int(tu[j])
                     t1 = units == tu[j]
-                    self.pca_scatter[i,ui-1].setData(x = pc[t1 & tidrand,0], y = pc[t1 & tidrand,1])
-                    self.units_axes[irow, icol].autoRange()
+                    if np.any(t1 & tidrand):
+                        self.pca_scatter[i,ui-1].setData(x = pc[t1 & tidrand,0], y = pc[t1 & tidrand,1])
+                        self.units_axes[irow, icol].autoRange()
                     # lines = MultiLine()
                     # lines.mysetData(waves[t1 & tidrand,])
                     # lines.setcolor(color_unit[int(tu[j])])
             irow = irow0 * 2 + 1
             self.units_axes[irow, icol].clear()
-            ttotu = [np.sum(x == units) for x in range(6)]
-            self.units_axes[irow, icol].setTitle(str(ttotu)) 
             self.units_axes[irow, icol].setLabel('left', 'Voltage')
             self.units_axes[irow, icol].setLabel('bottom', 'Time')
             if len(tu) > 0:    
+                ttotu = [np.sum(x == units) for x in range(1,int(np.max(tu))+1)]
+                self.units_axes[irow, icol].setTitle(str(ttotu)) 
                 for j in range(len(tu)):
                     ui = int(tu[j])
                     t1 = units == tu[j]

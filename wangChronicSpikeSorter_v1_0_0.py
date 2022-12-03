@@ -45,6 +45,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.SqueezeChannels.triggered.connect(self.sw_squeezechannels)
         self.RemovefromChannel.triggered.connect(self.sw_removefromchannel)
         self.setnoisethreshold.triggered.connect(self.sw_setnoisethreshold)
+        self.removeunitswithfewunits.triggered.connect(self.sw_removeunitswithfewunits)
         # self.seestatssinglecurve.triggered.connect(self.sw_singlecurvestats)
         self.pushButton_reset.clicked.connect(self.sw_reset)
         self.pushButton_Add.clicked.connect(self.sw_addpoint)
@@ -63,7 +64,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.comboBox_selectsession.activated.connect(self.sw_selectsessions)
     def setup_widget_viewall(self):
         self.widget_viewall = Ui_viewer()
-        self.widget_viewall.setup_viewer(2, 8, self.color_unit)
+        self.widget_viewall.setup_viewer(2, 8, self.color_unit, self.ratio)
     def setup_axes(self):
         self.setup_widget_viewall()
         # set up graphics view background
@@ -595,6 +596,25 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         xx = [x in fnow for x in self.channels]
         cid = np.where(xx)[0][0]
         self.readfile(cid)
+    
+    
+    def sw_removeunitswithfewunits(self):
+        dlg = Dialog_getTextValue()
+        dlg.setLabel('number threshold', '')
+        dlg.setValue('1000','')
+        if dlg.exec():
+            c, nthres, dummy = dlg.getInfo()
+            nthres = float(nthres)
+            unitsnew = self.units.copy()
+            for i in range(1, self.n_maxunit):
+                for j in range(self.n_sessionnow):
+                    tid = (self.units == i) & (self.sid == j)
+                    if np.sum(tid) < nthres:
+                        print(f'removing unit {i} from session {j}')
+                        unitsnew[tid] = -1
+            self.update_unit(unitsnew)
+
+
     def sw_sort_gmm(self):
         units_predict = []
         dlg = Dialog_getTextValue()

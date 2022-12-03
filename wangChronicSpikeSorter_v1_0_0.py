@@ -285,10 +285,11 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
             else:
                 self.units_axes[0, i].getViewBox().setBackgroundColor("w")
             tid = (units == i).squeeze()
+            ntotunit = np.sum(tid)
+            str = f"{ntotunit:.0f}, {self.rating[i]}"
             tid = tid & self.idx_randomsubset
             n_uniti = np.sum(tid)
             n_unitall = len(units)
-            str = f"{n_uniti:.0f}, {self.rating[i]}"
             # str = str + str_L
             self.units_axes[0, i].setTitle(str) # fake title
             self.units_axes[0, i].clear()

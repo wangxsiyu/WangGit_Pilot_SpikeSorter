@@ -12,14 +12,22 @@ from intersect import intersection
 import glob
 from random import sample, randint
 from sklearn import mixture
+from PyQt5.QtGui import QKeyEvent
 import sys
+from PyQt5.QtCore import pyqtSignal, pyqtSlot
 
 class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
     data = None
+    key_pressed = pyqtSignal(QKeyEvent)
     def __init__(self, parent = None):
         QMainWindow.__init__(self, parent = parent)
         self.setupUi(self)
         self.setup_SW()
+        self.key_pressed.connect(self.onkeyPressEvent)
+    def keyPressEvent(self, event):
+        # print('key pressed')
+        self.key_pressed.emit(event)
+        return super().keyPressEvent(event)
     def setup_SW(self):
         # set up colors
         self.color_unit = ["k","r","b","g","c","y"]
@@ -381,8 +389,11 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.reset_selectiontool(0)
         if (len(idp) > 0) and np.any(idp):
             self.update_selectedunit(idp, -1)
-    def keyPressEvent(self, event):
+    
+    @pyqtSlot(QKeyEvent)
+    def onkeyPressEvent(self, event):
         key = event.key()
+        print(f'key pressed: {key}')
         if self.is_loaddata == 0:
             return
         if key < 200: #ascii codes range
@@ -404,11 +415,11 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
                 if str == 'A':
                     self.update_selected()
                     self.set_addpoint(0)
-            if str == '=':
+            if str == '=' or str == '[':
                 self.rating[self.unit_now] =self.rating[self.unit_now] + 1
                 self.plt_units()
                 self.autosave()
-            if str == '-':
+            if str == '-' or str == ']':
                 self.rating[self.unit_now] =self.rating[self.unit_now] - 1
                 self.plt_units()
                 self.autosave()
@@ -631,8 +642,8 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
             ncluster = len(units_cluster)
             if ncluster == 0:
                 return
-            if self.model_GMM is None:
-                self.model_GMM = mixture.GaussianMixture(n_components=ncluster, covariance_type='diag', warm_start = True)
+            # if self.model_GMM is None or self.model_GMM.n_components != ncluster:
+            self.model_GMM = mixture.GaussianMixture(n_components=ncluster, covariance_type='diag', warm_start = True)
             pc = self.pca[:,:npca]
             if npca > 0:
                 pc1 = pc[units >=0 & self.is_usefordist,:]

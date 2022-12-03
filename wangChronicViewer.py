@@ -121,6 +121,8 @@ class Ui_viewer(QMainWindow):
                     cv2 = pg.PlotCurveItem(av_waves - sd_waves)
                     tl = pg.FillBetweenItem(curve1=cv1, curve2=cv2, brush=pg.mkBrush(color_unit[ui]))
                     self.units_axes[irow, icol].addItem(tl)
+            else:
+                self.units_axes[irow, icol].setTitle(str('no signal')) 
         self.cpu.toc()
 
                 

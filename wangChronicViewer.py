@@ -6,6 +6,7 @@ import numpy as np
 from wangSpikeSorterWidgets import Dialog_plot, Dialog_getTextValue, Dialog_CombineChannel, MultiLine, Ui_MainWindow
 from wangSpikeSorterCPU import SpikeSorterCPU
 from random import sample, randint
+from sys import platform
 
 class Ui_viewer(QMainWindow):
     def __init__(self, parent = None):
@@ -93,7 +94,12 @@ class Ui_viewer(QMainWindow):
                 self.pca_scatter[i,j].setData(x = [], y = [])
             irow = irow0 * 2
             # self.units_axes[irow, icol].clear()
-            tfile = file[i].split('\\')[1]
+
+            if platform == "darwin":
+                tfile = file[i].split('/')
+                tfile = tfile[len(tfile)-2]
+            elif platform == "win32":
+                tfile = file[i].split('\\')[1]
             self.units_axes[irow, icol].setTitle(str(tfile)) 
             if len(tu) > 0:
                 for j in range(len(tu)):

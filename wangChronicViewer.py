@@ -75,6 +75,15 @@ class Ui_viewer(QMainWindow):
     def plot(self, dataall, color_unit, file):
         print('viewer')
         self.cpu.tic()
+        
+        for i in range(8):
+            icol = i % self.ncol
+            irow0 = int(np.floor(i/self.ncol))
+            irow = irow0 * 2
+            self.units_axes[irow, icol].clear()
+            irow = irow0 * 2 + 1
+            self.units_axes[irow, icol].clear()
+            
         nd = len(dataall)
         for i in range(nd):
             units = dataall[i]['units'].item().copy()
@@ -85,10 +94,10 @@ class Ui_viewer(QMainWindow):
             irow0 = int(np.floor(i/self.ncol))
             tu = np.unique(units)
             tu = tu[tu >= 0]
-            if len(units) < 10000:
+            if waves.shape[0] < 10000:
                 tidrand = np.ones_like(units) == 1
             else:
-                tidx = sample(range(len(units)), 10000)
+                tidx = sample(range(waves.shape[0]), 10000)
                 tidrand = np.ones_like(units) == 0
                 tidrand[tidx] = True
             for j in range(self.n_maxunit):
@@ -106,8 +115,9 @@ class Ui_viewer(QMainWindow):
                 for j in range(len(tu)):
                     ui = int(tu[j])
                     t1 = units == tu[j]
-                    if np.any(t1 & tidrand):
-                        self.pca_scatter[i,ui].setData(x = pc[t1 & tidrand,0], y = pc[t1 & tidrand,1])
+                    if np.sum(t1 & tidrand) > 10:
+                        ttid = np.where(t1&tidrand)[0]
+                        self.pca_scatter[i,ui].setData(x = pc[ttid,0], y = pc[ttid,1])
                         self.units_axes[irow, icol].autoRange()
                     # lines = MultiLine()
                     # lines.mysetData(waves[t1 & tidrand,])

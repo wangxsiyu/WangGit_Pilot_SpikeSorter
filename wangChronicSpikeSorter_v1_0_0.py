@@ -865,7 +865,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
     def load_folder(self, folderName):
         self.setup_folder(folderName)
         self.comboBox_channel.clear()
-        self.comboBox_channel.addItems(self.channellist)
+        self.comboBox_channel.addItems(self.channels)
         self.readfile(0)
     
     def readfile(self, cid):

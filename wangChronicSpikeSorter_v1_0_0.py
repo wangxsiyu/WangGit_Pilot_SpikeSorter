@@ -18,6 +18,7 @@ from PyQt5.QtCore import pyqtSignal, pyqtSlot
 
 class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
     data = None
+    fastmode = False
     key_pressed = pyqtSignal(QKeyEvent)
     def __init__(self, parent = None):
         QMainWindow.__init__(self, parent = parent)
@@ -180,8 +181,8 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.toc(1)
         self.plt_locked()
         # self.toc()
-        # self.toc(1)
         self.plt_noise()
+        self.toc(1)
     def plt_noise(self):
         waves = self.waves.copy()
         units = self.units.copy()
@@ -208,6 +209,9 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.graphicsView_side2.setLabel('left', 'Voltage')
         self.graphicsView_side2.setLabel('bottom', 'Time')
         tid = (units == -1).squeeze()
+        tid = tid & self.idx_randomsubset
+        if self.fastmode and np.sum(tid) > 1001:
+            tid[np.where(tid)[0][1000:]] = False
         if (any(tid)):
             tl = MultiLine()
             tl.mysetData(waves[tid,])
@@ -289,6 +293,8 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
             ntotunit = np.sum(tid)
             str = f"{ntotunit:.0f}, {self.rating[i]}"
             tid = tid & self.idx_randomsubset
+            if self.fastmode and np.sum(tid) > 1001:
+                tid[np.where(tid)[0][1000:]] = False
             n_uniti = np.sum(tid)
             n_unitall = len(units)
             # str = str + str_L
@@ -323,6 +329,9 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
                 thst = pg.PlotCurveItem(tx, ty, pen=pg.mkPen(self.color_unit[i]))
                 self.units_axes[2, i].addItem(thst)
                 self.units_axes[2, i].autoRange()
+
+                if self.fastmode:
+                    continue
                 # distance from clusters
                 dst = self.dist_waves
                 if not np.all(np.isnan(dst[:, i])):
@@ -417,6 +426,12 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
                 if str == 'A':
                     self.update_selected()
                     self.set_addpoint(0)
+                if str == 'F':
+                    self.fastmode = True
+                    print('fast mode enabled')
+                if str == 'O':
+                    self.fastmode = False
+                    print('fast mode disabled')
             if str == '=' or str == '[':
                 if self.rating.dtype == 'int32':
                     self.rating[self.unit_now] =self.rating[self.unit_now] + 1
@@ -869,7 +884,10 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.readfile(0)
     
     def readfile(self, cid):
-        self.choosefile(cid)        
+        print('loading file')
+        self.tic()
+        self.choosefile(cid)
+        self.toc(1)        
         # add other default operations
         self.label_channel.setText(f'{cid+1} / {self.n_channel}: {self.channels[cid]}')
         self.comboBox_channel.setCurrentIndex(cid)
@@ -880,9 +898,10 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.comboBox_passivesessions.clear()
         self.comboBox_selectsession.setCurrentIndex(0)
         self.is_loaddata = True
+        print('comp setup')
         self.comp_setup()
         self.statusbar.showMessage(f"loaded channel: {self.channels[cid]}")
-
+        print('done reading file')
     def get_randomsubsets(self):
         units = self.units.copy()
         nu = units.size
@@ -945,6 +964,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         if self.units.size > 1:
             self.plt_all()
             self.addhistory()
+            self.toc(1)
         else:
             out = QMessageBox.warning(self, "Warning", "This channel is empty, move on to the next")
             if out:

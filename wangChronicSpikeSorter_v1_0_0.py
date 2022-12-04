@@ -54,6 +54,7 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
         self.RemovefromChannel.triggered.connect(self.sw_removefromchannel)
         self.setnoisethreshold.triggered.connect(self.sw_setnoisethreshold)
         self.removeunitswithfewunits.triggered.connect(self.sw_removeunitswithfewunits)
+        self.sortunitsbyrange.triggered.connect(self.sw_sortunitsbyrange)
         # self.seestatssinglecurve.triggered.connect(self.sw_singlecurvestats)
         self.pushButton_reset.clicked.connect(self.sw_reset)
         self.pushButton_Add.clicked.connect(self.sw_addpoint)
@@ -417,11 +418,17 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
                     self.update_selected()
                     self.set_addpoint(0)
             if str == '=' or str == '[':
-                self.rating[self.unit_now] =self.rating[self.unit_now] + 1
+                if self.rating.dtype == 'int32':
+                    self.rating[self.unit_now] =self.rating[self.unit_now] + 1
+                else:
+                    self.rating = np.array([int(x) for x in self.rating], dtype = 'int32')
                 self.plt_units()
                 self.autosave()
             if str == '-' or str == ']':
-                self.rating[self.unit_now] =self.rating[self.unit_now] - 1
+                if self.rating.dtype == 'int32':
+                    self.rating[self.unit_now] = self.rating[self.unit_now] - 1
+                else:
+                    self.rating = np.array([int(x) for x in self.rating], dtype = 'int32')
                 self.plt_units()
                 self.autosave()
     def sw_sort_minimaldist(self):
@@ -625,6 +632,28 @@ class SW_MainWindow(QMainWindow, Ui_MainWindow, SpikeSorterCPU):
                         print(f'removing unit {i} from session {j}')
                         unitsnew[tid] = -1
             self.update_unit(unitsnew)
+
+
+    def sw_sortunitsbyrange(self):
+        unitsnew = self.units.copy()
+        unitsnew[unitsnew > 0] = 0
+        waves = self.waves.copy()
+        rgwv = np.max(waves, axis = 1) - np.min(waves, axis=1)
+        for j in range(self.n_sessionnow):
+            trg = np.zeros(self.n_maxunit)
+            trg[0] = np.Inf
+            for i in range(1, self.n_maxunit):
+                tid = (self.units == i) & (self.sid == j)
+                if np.any(tid):
+                    trg[i] = np.mean(rgwv[tid])
+                else:
+                    trg[i] = -np.Inf
+            tod = np.argsort(-trg)
+            for i in range(1, self.n_maxunit):
+                tid = (self.units == i) & (self.sid == j)
+                if np.any(tid):
+                    unitsnew[tid] = tod[i]
+        self.update_unit(unitsnew)
 
 
     def sw_sort_gmm(self):

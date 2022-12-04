@@ -9,6 +9,7 @@ from random import sample, randint
 from sys import platform
 
 class Ui_viewer(QMainWindow):
+    n_maxunit = 6
     def __init__(self, parent = None):
         QMainWindow.__init__(self, parent = parent)
         self.cpu = SpikeSorterCPU()
@@ -64,13 +65,13 @@ class Ui_viewer(QMainWindow):
             irow0 = int(np.floor(i/self.ncol))
             irow = irow0 * 2
             self.units_axes[irow, icol].clear()
-            for j in range(5):
-                ui = j + 1
+            for j in range(self.n_maxunit):
+                ui = j
                 te = pg.ScatterPlotItem(brush=pg.mkBrush(color_unit[ui]))
                 te.setSize(2)
                 self.pca_scatter.append(te) 
                 self.units_axes[irow, icol].addItem(te)
-        self.pca_scatter = np.reshape(self.pca_scatter, (-1, 5))
+        self.pca_scatter = np.reshape(self.pca_scatter, (-1, self.n_maxunit))
     def plot(self, dataall, color_unit, file):
         print('viewer')
         self.cpu.tic()
@@ -83,14 +84,14 @@ class Ui_viewer(QMainWindow):
             icol = i % self.ncol
             irow0 = int(np.floor(i/self.ncol))
             tu = np.unique(units)
-            tu = tu[tu > 0]
+            tu = tu[tu >= 0]
             if len(units) < 10000:
                 tidrand = np.ones_like(units) == 1
             else:
                 tidx = sample(range(len(units)), 10000)
                 tidrand = np.ones_like(units) == 0
                 tidrand[tidx] = True
-            for j in range(5):
+            for j in range(self.n_maxunit):
                 self.pca_scatter[i,j].setData(x = [], y = [])
             irow = irow0 * 2
             # self.units_axes[irow, icol].clear()
@@ -106,7 +107,7 @@ class Ui_viewer(QMainWindow):
                     ui = int(tu[j])
                     t1 = units == tu[j]
                     if np.any(t1 & tidrand):
-                        self.pca_scatter[i,ui-1].setData(x = pc[t1 & tidrand,0], y = pc[t1 & tidrand,1])
+                        self.pca_scatter[i,ui].setData(x = pc[t1 & tidrand,0], y = pc[t1 & tidrand,1])
                         self.units_axes[irow, icol].autoRange()
                     # lines = MultiLine()
                     # lines.mysetData(waves[t1 & tidrand,])
@@ -116,10 +117,12 @@ class Ui_viewer(QMainWindow):
             self.units_axes[irow, icol].setLabel('left', 'Voltage')
             self.units_axes[irow, icol].setLabel('bottom', 'Time')
             if len(tu) > 0:    
-                ttotu = [np.sum(x == units) for x in range(1,int(np.max(tu))+1)]
+                ttotu = [np.sum(x == units) for x in range(int(np.max(tu))+1)]
                 self.units_axes[irow, icol].setTitle(str(ttotu)) 
                 for j in range(len(tu)):
                     ui = int(tu[j])
+                    if tu[j] == 0:
+                        continue
                     t1 = units == tu[j]
                     av_waves = np.mean(waves[t1,], axis = 0)
                     sd_waves = np.std(waves[t1,], axis = 0)

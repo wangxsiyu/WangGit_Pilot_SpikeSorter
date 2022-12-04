@@ -349,6 +349,11 @@ class Ui_MainWindow(object):
         self.removeunitswithfewunits = QtWidgets.QAction(MainWindow)
         self.removeunitswithfewunits.setObjectName("removeunitswithfewunits")
         self.menuFunction.addAction(self.removeunitswithfewunits)
+        
+        self.sortunitsbyrange = QtWidgets.QAction(MainWindow)
+        self.sortunitsbyrange.setObjectName("sortunitsbyrange")
+        self.menuFunction.addAction(self.sortunitsbyrange)
+
         self.menubar.addAction(self.menuFile.menuAction())
         self.menubar.addAction(self.menuEdit.menuAction())
         self.menubar.addAction(self.menuFunction.menuAction())
@@ -414,6 +419,7 @@ class Ui_MainWindow(object):
         self.setnoisethreshold.setText(_translate("MainWindow", "Set noise threshold"))
         self.seestatssinglecurve.setText(_translate("MainWindow", "Single curve stats"))
         self.removeunitswithfewunits.setText(_translate("MainWindow", "remove neurons with few units"))
+        self.sortunitsbyrange.setText(_translate("MainWindow", "sort units by range"))
         self.comboBox_selectsession.setItemText(0, _translate("MainWindow", "return"))
         self.comboBox_selectsession.setItemText(1, _translate("MainWindow", "select all"))
         self.comboBox_selectsession.setItemText(2, _translate("MainWindow", "remove from active"))

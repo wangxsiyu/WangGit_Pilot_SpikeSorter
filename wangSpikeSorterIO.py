@@ -89,6 +89,8 @@ class SpikeSorterIO():
                 if self.activesession[i]:
                     tw = self.dataall[i]['waves'].item()
                     tu = self.dataall[i]['units'].item()
+                    if tu.size < 5:
+                        continue
                     trt = self.rawall[i]['rater_confidence'].squeeze()
                     trt = trt[:self.n_maxunit]
                     tsid = np.ones(len(tu)) * i
@@ -139,7 +141,8 @@ class SpikeSorterIO():
                 if self.activesession[i]:
                     tid = self.sid == i
                     self.dataall[i]['units'].itemset(self.units[tid]) 
-                    self.rawall[i]['rater_confidence'] = self.rating
+                    if self.rating.dtype == 'int32':
+                        self.rawall[i]['rater_confidence'] = self.rating
                     
 # test = SpikeSorterIO()
 # test.setup_folder("W:\\Wang_Projects\\2022_Wang_Averbeck_Attractor_Uncertainty\\SpikeSorting\\version_Siyu\\Voltaire")

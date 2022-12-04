@@ -79,13 +79,13 @@ class Ui_viewer(QMainWindow):
         for i in range(8):
             icol = i % self.ncol
             irow0 = int(np.floor(i/self.ncol))
-            irow = irow0 * 2
-            self.units_axes[irow, icol].clear()
             irow = irow0 * 2 + 1
             self.units_axes[irow, icol].clear()
             
         nd = len(dataall)
         for i in range(nd):
+            for j in range(self.n_maxunit):
+                self.pca_scatter[i,j].setData(x = [], y = [])
             units = dataall[i]['units'].item().copy()
             waves = dataall[i]['waves'].item().copy()
             pc = self.cpu.PCA(waves)
@@ -100,8 +100,6 @@ class Ui_viewer(QMainWindow):
                 tidx = sample(range(waves.shape[0]), 10000)
                 tidrand = np.ones_like(units) == 0
                 tidrand[tidx] = True
-            for j in range(self.n_maxunit):
-                self.pca_scatter[i,j].setData(x = [], y = [])
             irow = irow0 * 2
             # self.units_axes[irow, icol].clear()
 

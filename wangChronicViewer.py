@@ -81,11 +81,12 @@ class Ui_viewer(QMainWindow):
             irow0 = int(np.floor(i/self.ncol))
             irow = irow0 * 2 + 1
             self.units_axes[irow, icol].clear()
+            self.units_axes[irow, icol].setTitle(str(''))
+            for j in range(self.n_maxunit):
+                self.pca_scatter[i,j].setData(x = [], y = [])
             
         nd = len(dataall)
         for i in range(nd):
-            for j in range(self.n_maxunit):
-                self.pca_scatter[i,j].setData(x = [], y = [])
             units = dataall[i]['units'].item().copy()
             waves = dataall[i]['waves'].item().copy()
             pc = self.cpu.PCA(waves)
